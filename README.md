@@ -4,6 +4,13 @@ Detta projekt är en del av den examinerande inlämningen i kursen Systemutveckl
 
 
 
+
+
+
+
+
+
+
 Funktionalitet
 Backend (ASP.NET Core Web API)
 Hämtar kundprofiler och konton via endpoints
@@ -17,6 +24,11 @@ All data hämtas från API:et via HTTP-anrop och visas direkt i gränssnittet
 Setup
 Connection String till databasen:
 Server=localhost;Database=BankBlazor;Trusted_Connection=True;TrustServerCertificate=true;Command Timeout=180 Database First Scaffolding: Server=localhost;Database=BankBlazor;Trusted_Connection=True;TrustServerCertificate=true;Command Timeout=180" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data
+
+
+
+
+
 
 
 
