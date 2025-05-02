@@ -2,6 +2,8 @@ BankBlazor – Examinationsuppgift i Systemutveckling .NET
 Beskrivning
 Detta projekt är en del av den examinerande inlämningen i kursen Systemutveckling .NET. Syftet är att bygga en bankapplikation enligt headless-arkitektur, där frontend (Blazor WebAssembly) och backend (.NET Web API) är separerade och kommunicerar med varandra via JSON och HTTP-anrop. Backend är kopplad till en databas genom Entity Framework Core (Database First).
 
+
+
 Funktionalitet
 Backend (ASP.NET Core Web API)
 Hämtar kundprofiler och konton via endpoints
@@ -15,6 +17,9 @@ All data hämtas från API:et via HTTP-anrop och visas direkt i gränssnittet
 Setup
 Connection String till databasen:
 Server=localhost;Database=BankBlazor;Trusted_Connection=True;TrustServerCertificate=true;Command Timeout=180 Database First Scaffolding: Server=localhost;Database=BankBlazor;Trusted_Connection=True;TrustServerCertificate=true;Command Timeout=180" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data
+
+
+
 
 Krav som uppfylls
 Headless-arkitektur (.NET API + Blazor WebAssembly)
