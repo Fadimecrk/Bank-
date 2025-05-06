@@ -1,0 +1,87 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using YourProjectNamespace.Models; // Anpassa till din namespace
+using YourProjectNamespace.Data;   // Anpassa till din DbContext
+
+[ApiController]
+[Route("api/[controller]")]
+public class TransactionController : ControllerBase
+{
+    private readonly BankContext _context;
+
+    public TransactionController(BankContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet("account/{accountNumber}")]
+    public async Task<IActionResult> GetTransactions(string accountNumber)
+    {
+        var transactions = await _context.Transactions
+            .Where(t => t.BankAccountNumber == accountNumber)
+            .ToListAsync();
+
+        return Ok(transactions);
+    }
+
+    [HttpPost("deposit")]
+    public async Task<IActionResult> Deposit([FromBody] Transaction transaction)
+    {
+        if (transaction.Amount <= 0) return BadRequest("Amount must be positive");
+
+        transaction.TransactionType = "Deposit";
+        transaction.TransactionDate = DateTime.Now;
+
+        _context.Transactions.Add(transaction);
+        var account = await _context.BankAccounts.FindAsync(transaction.BankAccountNumber);
+        if (account == null) return NotFound("Account not found");
+
+        account.Balance += transaction.Amount;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Flag = true, Message = "Deposit successful" });
+    }
+
+    [HttpPost("withdraw")]
+    public async Task<IActionResult> Withdraw([FromBody] Transaction transaction)
+    {
+        if (transaction.Amount <= 0) return BadRequest("Amount must be positive");
+
+        var account = await _context.BankAccounts.FindAsync(transaction.BankAccountNumber);
+        if (account == null) return NotFound("Account not found");
+        if (account.Balance < transaction.Amount) return BadRequest("Insufficient balance");
+
+        transaction.TransactionType = "Withdraw";
+        transaction.TransactionDate = DateTime.Now;
+
+        _context.Transactions.Add(transaction);
+        account.Balance -= transaction.Amount;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Flag = true, Message = "Withdrawal successful" });
+    }
+
+    [HttpPost("transfer")]
+    public async Task<IActionResult> Transfer([FromBody] Transaction transaction)
+    {
+        var sender = await _context.BankAccounts.FindAsync(transaction.BankAccountNumber);
+        var receiver = await _context.BankAccounts.FindAsync(transaction.ReceiverAccountNumber);
+
+        if (sender == null || receiver == null)
+            return NotFound("One or both accounts not found");
+
+        if (sender.Balance < transaction.Amount)
+            return BadRequest("Insufficient balance");
+
+        transaction.TransactionType = "Transfer";
+        transaction.TransactionDate = DateTime.Now;
+
+        sender.Balance -= transaction.Amount;
+        receiver.Balance += transaction.Amount;
+
+        _context.Transactions.Add(transaction);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Flag = true, Message = "Transfer successful" });
+    }
+}
