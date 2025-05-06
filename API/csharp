@@ -1,0 +1,17 @@
+public class TransactionServiceTests
+{
+    [Fact]
+    public void Deposit_ValidAmount_IncreasesBalance()
+    {
+        // Arrange
+        var mockRepo = new Mock<ITransactionRepository>();
+        var service = new TransactionService(mockRepo.Object);
+        var account = new BankAccount { Balance = 100 };
+
+        // Act
+        service.Deposit(account, 50);
+
+        // Assert
+        Assert.Equal(150, account.Balance);
+    }
+}
