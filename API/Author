@@ -1,0 +1,6 @@
+[Authorize]
+[HttpGet]
+public IActionResult GetTransactions()
+{
+    // Implementation
+}
